@@ -4,7 +4,7 @@
 
 import { Product, Customization, formatCOP } from '../domain/types';
 
-const WHATSAPP_NUMBER = '573001234567'; // Reemplazar con número real
+const WHATSAPP_NUMBER = process.env.NEXT_PUBLIC_WHATSAPP_NUMBER ?? '573004926135';
 
 export const generateWhatsAppLink = (
     product: Product,

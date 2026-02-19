@@ -21,7 +21,7 @@ export default function Footer() {
                                 <a href="https://www.instagram.com/autenticaarmonia?utm_source=qr&igsh=MTJwZTZiMHU1dWN4eA%3D%3D" target="_blank" rel="noopener noreferrer" style={iconStyle}>
                                     <Instagram size={18} />
                                 </a>
-                                <a href="https://wa.me/573007414990" target="_blank" rel="noopener noreferrer" style={{ ...iconStyle, background: 'var(--color-whatsapp)' }}>
+                                <a href="https://wa.me/573004926135" target="_blank" rel="noopener noreferrer" style={{ ...iconStyle, background: 'var(--color-whatsapp)' }}>
                                     <MessageCircle size={18} />
                                 </a>
                             </div>

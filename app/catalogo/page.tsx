@@ -74,7 +74,7 @@ export default async function CatalogoPage() {
                         ¿No encuentras lo que buscas?{' '}
                         <strong>✦ Personaliza tu pieza ideal</strong>
                     </p>
-                    <a href={`https://wa.me/${process.env.NEXT_PUBLIC_WHATSAPP_NUMBER ?? '573001234567'}`}
+                    <a href={`https://wa.me/${process.env.NEXT_PUBLIC_WHATSAPP_NUMBER ?? '573004926135'}`}
                         target="_blank" rel="noopener noreferrer"
                         className="btn btn-gold" style={{ padding: '0.6rem 1.5rem', fontSize: '0.875rem' }}>
                         Escríbenos →
