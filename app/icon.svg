@@ -1,0 +1,22 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100">
+  <defs>
+    <linearGradient id="greenGloss" x1="0%" y1="0%" x2="0%" y2="100%">
+      <stop offset="0%" style="stop-color:#A5D6A7;stop-opacity:1" />
+      <stop offset="100%" style="stop-color:#66BB6A;stop-opacity:1" />
+    </linearGradient>
+  </defs>
+  
+  <!-- Outer circle -->
+  <circle cx="50" cy="50" r="48" fill="#fff" stroke="#C8E6C9" stroke-width="1"/>
+  
+  <!-- Inner green circle -->
+  <circle cx="50" cy="50" r="42" fill="url(#greenGloss)" />
+  
+  <!-- Tree Icon White -->
+  <g transform="translate(50, 55) scale(0.6)">
+    <path d="M0 30 L0 0 Q-10 -20 -20 -15 M0 0 Q10 -20 20 -15" stroke="#fff" stroke-width="3" fill="none" stroke-linecap="round"/>
+    <circle cx="0" cy="-25" r="4" fill="#fff"/>
+    <circle cx="-15" cy="-15" r="3" fill="#fff"/>
+    <circle cx="15" cy="-15" r="3" fill="#fff"/>
+  </g>
+</svg>

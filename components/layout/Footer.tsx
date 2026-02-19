@@ -16,13 +16,16 @@ export default function Footer() {
                         <p style={{ color: '#94A3B8', fontSize: '0.9rem', lineHeight: 1.7, marginBottom: '1.25rem' }}>
                             Accesorios artesanales tejidos con amor y buena energía desde Medellín, Colombia.
                         </p>
-                        <div style={{ display: 'flex', gap: '0.75rem' }}>
-                            <a href="https://instagram.com" target="_blank" rel="noopener noreferrer" style={iconStyle}>
-                                <Instagram size={18} />
-                            </a>
-                            <a href="https://wa.me/573001234567" target="_blank" rel="noopener noreferrer" style={{ ...iconStyle, background: 'var(--color-whatsapp)' }}>
-                                <MessageCircle size={18} />
-                            </a>
+                        <div style={{ display: 'flex', alignItems: 'center', gap: '1rem', marginTop: '1.5rem' }}>
+                            <div style={{ display: 'flex', gap: '0.75rem' }}>
+                                <a href="https://instagram.com" target="_blank" rel="noopener noreferrer" style={iconStyle}>
+                                    <Instagram size={18} />
+                                </a>
+                                <a href="https://wa.me/573007414990" target="_blank" rel="noopener noreferrer" style={{ ...iconStyle, background: 'var(--color-whatsapp)' }}>
+                                    <MessageCircle size={18} />
+                                </a>
+                            </div>
+                            <img src="/images/badge.svg" alt="Hecho en Medellín" style={{ width: 60, height: 60, opacity: 0.9 }} />
                         </div>
                     </div>
 

@@ -1,4 +1,52 @@
-<svg width="400" height="400" xmlns="http://www.w3.org/2000/svg" style="background-color:#f1f5f9">
-  <text x="50%" y="50%" font-family="sans-serif" font-size="20" fill="#94a3b8" text-anchor="middle" dy=".3em">Imagen no disponible</text>
-  <rect x="0" y="0" width="400" height="400" fill="none" stroke="#e2e8f0" stroke-width="2"/>
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 600 450">
+  <defs>
+    <!-- Sky Gradient -->
+    <linearGradient id="skyGrad" x1="0%" y1="0%" x2="0%" y2="100%">
+      <stop offset="0%" style="stop-color:#E3F2FD;stop-opacity:1" /> <!-- Light Blue Sky -->
+      <stop offset="50%" style="stop-color:#E1F5FE;stop-opacity:1" />
+      <stop offset="100%" style="stop-color:#FFFFFF;stop-opacity:1" /> <!-- White Horizon -->
+    </linearGradient>
+
+    <!-- Hills Gradient -->
+    <linearGradient id="hillGrad" x1="0%" y1="0%" x2="0%" y2="100%">
+      <stop offset="0%" style="stop-color:#C8E6C9;stop-opacity:1" /> <!-- Light Green -->
+      <stop offset="100%" style="stop-color:#A5D6A7;stop-opacity:1" /> <!-- Darker Green -->
+    </linearGradient>
+
+    <!-- Cloud Texture Filter -->
+    <filter id="cloudy">
+      <feTurbulence type="fractalNoise" baseFrequency="0.012" numOctaves="4" />
+      <feDisplacementMap in="SourceGraphic" scale="10" />
+    </filter>
+  </defs>
+
+  <!-- Background -->
+  <rect width="600" height="450" fill="url(#skyGrad)" />
+  
+  <!-- Subtle Clouds -->
+  <path d="M50 100 Q100 80 150 100 T250 100 T350 100" fill="none" stroke="#FFFFFF" stroke-width="40" stroke-opacity="0.5" filter="url(#cloudy)"/>
+  <path d="M-50 200 Q50 150 150 200 T350 200" fill="none" stroke="#FFFFFF" stroke-width="50" stroke-opacity="0.4" filter="url(#cloudy)"/>
+
+  <!-- Hills Bottom -->
+  <path d="M0 450 L0 380 Q150 350 300 380 T600 380 L600 450 Z" fill="url(#hillGrad)" opacity="0.8"/>
+  <path d="M0 450 L0 400 Q150 420 300 400 T600 420 L600 450 Z" fill="#81C784" opacity="0.6"/>
+
+  <!-- Large Tree in Center (Watercolor style) -->
+  <g transform="translate(300, 380) scale(2.5)">
+    <!-- Trunk -->
+    <path d="M0 0 Q-5 -20 -5 -40 Q-5 -60 10 -80" fill="none" stroke="#A1887F" stroke-width="2.5" stroke-linecap="round"/>
+    <path d="M0 0 Q5 -20 5 -40 Q5 -60 -10 -80" fill="none" stroke="#A1887F" stroke-width="2.5" stroke-linecap="round"/>
+    
+    <!-- Simple Leaves -->
+    <ellipse cx="-15" cy="-85" rx="3" ry="6" fill="#FFAB91" transform="rotate(-45 -15 -85)"/>
+    <ellipse cx="0" cy="-95" rx="3" ry="6" fill="#FFF59D" />
+    <ellipse cx="15" cy="-85" rx="3" ry="6" fill="#80DEEA" transform="rotate(45 15 -85)"/>
+  </g>
+
+  <!-- Text -->
+  <text x="300" y="320" text-anchor="middle" font-family="'Segoe UI', sans-serif" font-size="28" fill="#37474F" letter-spacing="1">No hay imagen disponible</text>
+  
+  <!-- Heart at bottom -->
+  <path d="M300 430 C300 430 290 420 290 415 C290 410 295 405 300 410 C305 405 310 410 310 415 C310 420 300 430 300 430 Z" fill="#fff" opacity="0.8"/>
+
 </svg>

@@ -24,19 +24,15 @@ export default function Navbar() {
         }}>
             <div className="container-brand" style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', height: '72px' }}>
                 {/* Logo */}
+                {/* Logo */}
                 <Link href="/" style={{ display: 'flex', alignItems: 'center', gap: '10px', textDecoration: 'none' }}>
-                    <div style={{
-                        width: 36, height: 36, background: 'var(--color-teal)',
-                        borderRadius: '50%', display: 'flex', alignItems: 'center', justifyContent: 'center',
-                    }}>
-                        <Sparkles size={18} color="#DBFFFF" />
-                    </div>
+                    <img src="/images/logo.svg" alt="Logo Auténtica Armonía" style={{ width: 48, height: 48 }} />
                     <div>
                         <span style={{
-                            fontFamily: 'var(--font-serif)', fontWeight: 700, fontSize: '1.15rem',
-                            color: 'var(--color-navy)', letterSpacing: '-0.01em',
+                            fontFamily: 'var(--font-serif)', fontWeight: 700, fontSize: '1.25rem',
+                            color: 'var(--color-navy)', letterSpacing: '-0.01em', lineHeight: 1
                         }}>
-                            Auténtica Armonía
+                            Auténtica<br />Armonía
                         </span>
                     </div>
                 </Link>
@@ -50,15 +46,6 @@ export default function Navbar() {
                     ))}
                     <Link href="/catalogo" className="btn btn-primary" style={{ padding: '0.5rem 1.25rem', fontSize: '0.85rem' }}>
                         Ver Colección
-                    </Link>
-                    <Link href="/admin" style={{
-                        fontSize: '0.75rem', color: 'var(--color-stone-light)',
-                        textDecoration: 'none', transition: 'color 0.2s',
-                    }}
-                        onMouseEnter={e => (e.currentTarget.style.color = 'var(--color-teal)')}
-                        onMouseLeave={e => (e.currentTarget.style.color = 'var(--color-stone-light)')}
-                    >
-                        Admin
                     </Link>
                 </div>
 

@@ -1,0 +1,82 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 400 400">
+  <defs>
+    <!-- Soft Watercolor Gradient for Inner Circle -->
+    <radialGradient id="waterColorGrad" cx="50%" cy="40%" r="60%" fx="50%" fy="40%">
+      <stop offset="0%" style="stop-color:#E0F7FA;stop-opacity:1" /> <!-- White/Cyan center -->
+      <stop offset="70%" style="stop-color:#80DEEA;stop-opacity:1" /> <!-- Soft Cyan -->
+      <stop offset="100%" style="stop-color:#4DD0E1;stop-opacity:1" /> <!-- Darker Teal Edge -->
+    </radialGradient>
+    
+    <!-- Glossy Overlay -->
+    <linearGradient id="gloss" x1="0%" y1="0%" x2="0%" y2="100%">
+      <stop offset="0%" style="stop-color:#FFFFFF;stop-opacity:0.4" />
+      <stop offset="50%" style="stop-color:#FFFFFF;stop-opacity:0" />
+    </linearGradient>
+
+    <!-- Drop Shadow -->
+    <filter id="softShadow" x="-20%" y="-20%" width="140%" height="140%">
+      <feGaussianBlur in="SourceAlpha" stdDeviation="3"/>
+      <feOffset dx="2" dy="2" result="offsetblur"/>
+      <feComponentTransfer>
+        <feFuncA type="linear" slope="0.2"/>
+      </feComponentTransfer>
+      <feMerge> 
+        <feMergeNode/>
+        <feMergeNode in="SourceGraphic"/> 
+      </feMerge>
+    </filter>
+  </defs>
+
+  <!-- Outer White Circle/Ring (Sticker effect) -->
+  <circle cx="200" cy="200" r="190" fill="#FFFBF5" filter="url(#softShadow)"/>
+  
+  <!-- Main Inner Circle -->
+  <circle cx="200" cy="200" r="145" fill="url(#waterColorGrad)" stroke="#FFD54F" stroke-width="4"/>
+
+  <!-- Glossy top half -->
+  <path d="M55,200 A145,145 0 0,1 345,200 A145,145 0 0,0 55,200" fill="url(#gloss)" />
+
+  <!-- === TREE DESIGN === -->
+  <g transform="translate(200, 215) scale(1.3)">
+    <!-- Main Trunk: Elegant, curvy, feminine form -->
+    <path d="M0 -40 Q-10 -20 0 0 Q10 20 0 40" fill="none" stroke="#8D6E63" stroke-width="3" stroke-linecap="round"/>
+    
+    <!-- Left Branch/Arm -->
+    <path d="M0 -20 Q-20 -30 -40 -25" fill="none" stroke="#8D6E63" stroke-width="2.5" stroke-linecap="round"/>
+    <!-- Right Branch/Arm -->
+    <path d="M0 -20 Q20 -30 40 -25" fill="none" stroke="#8D6E63" stroke-width="2.5" stroke-linecap="round"/>
+    
+    <!-- Roots -->
+    <path d="M0 40 Q-10 60 -30 65" fill="none" stroke="#8D6E63" stroke-width="2" stroke-linecap="round"/>
+    <path d="M0 40 Q10 60 30 65" fill="none" stroke="#8D6E63" stroke-width="2" stroke-linecap="round"/>
+    <path d="M0 40 L0 70" fill="none" stroke="#8D6E63" stroke-width="2" stroke-linecap="round"/>
+
+    <!-- Leaves: Oval shapes, soft colors -->
+    <!-- Left Arc -->
+    <ellipse cx="-45" cy="-25" rx="6" ry="10" fill="#FF8A65" transform="rotate(-60 -45 -25)" /> <!-- Orange -->
+    <ellipse cx="-35" cy="-50" rx="6" ry="10" fill="#FFD54F" transform="rotate(-40 -35 -50)" /> <!-- Yellow -->
+    <ellipse cx="-15" cy="-65" rx="6" ry="10" fill="#4DB6AC" transform="rotate(-20 -15 -65)" /> <!-- Teal -->
+    
+    <!-- Top Center -->
+    <ellipse cx="0" cy="-70" rx="6" ry="12" fill="#81C784" /> <!-- Green -->
+
+    <!-- Right Arc -->
+    <ellipse cx="15" cy="-65" rx="6" ry="10" fill="#4FC3F7" transform="rotate(20 15 -65)" /> <!-- Blue -->
+    <ellipse cx="35" cy="-50" rx="6" ry="10" fill="#7986CB" transform="rotate(40 35 -50)" /> <!-- Indigo -->
+    <ellipse cx="45" cy="-25" rx="6" ry="10" fill="#BA68C8" transform="rotate(60 45 -25)" /> <!-- Purple -->
+  </g>
+
+  <!-- === TEXT === -->
+  <!-- Top: Auténtica -->
+  <path id="curveTop" d="M 70,155 A 130,130 0 0,1 330,155" fill="none"/>
+  <text font-family="'Segoe UI', 'Helvetica Neue', sans-serif" font-size="44" font-weight="600" fill="#00695C" opacity="0.9">
+    <textPath href="#curveTop" startOffset="50%" text-anchor="middle">Auténtica</textPath>
+  </text>
+
+  <!-- Bottom: Armonía -->
+  <path id="curveBottom" d="M 80,245 A 120,120 0 0,0 320,245" fill="none"/>
+  <text font-family="'Segoe UI', 'Helvetica Neue', sans-serif" font-size="44" font-weight="600" fill="#00695C" opacity="0.9">
+    <textPath href="#curveBottom" startOffset="50%" text-anchor="middle">Armonía</textPath>
+  </text>
+  
+</svg>
