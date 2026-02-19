@@ -2,7 +2,7 @@
 // Fetcha el producto y productos relacionados de Supabase
 
 import { notFound } from 'next/navigation';
-import { getSupabaseAdmin } from '@/lib/infrastructure/supabaseAdmin';
+import { supabase } from '@/lib/infrastructure/supabase';
 
 import ProductoClient from '@/components/feature/ProductoClient';
 import type { Product } from '@/lib/domain/types';
@@ -39,8 +39,7 @@ export default async function ProductoPage({ params }: Props) {
     const { slug } = await params;
 
     // Fetch producto principal
-    const admin = getSupabaseAdmin();
-    const { data: productData } = await admin
+    const { data: productData } = await supabase
         .from('products')
         .select('*')
         .eq('slug', slug)
@@ -51,7 +50,7 @@ export default async function ProductoPage({ params }: Props) {
     const product = mapProduct(productData as Record<string, unknown>);
 
     // Fetch productos relacionados (misma técnica, excluyendo el actual)
-    const { data: relatedData } = await admin
+    const { data: relatedData } = await supabase
         .from('products')
         .select('*')
         .eq('technique', product.technique)

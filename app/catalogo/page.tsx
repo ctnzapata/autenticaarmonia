@@ -1,7 +1,7 @@
 // Server Component: Catálogo
 // Fetcha productos de Supabase y pasa al CatalogoClient (filtros interactivos)
 
-import { getSupabaseAdmin } from '@/lib/infrastructure/supabaseAdmin';
+import { supabase } from '@/lib/infrastructure/supabase';
 
 import CatalogoClient from '@/components/feature/CatalogoClient';
 import type { Product } from '@/lib/domain/types';
@@ -32,8 +32,7 @@ export const dynamic = 'force-dynamic';
 
 export default async function CatalogoPage() {
 
-    const admin = getSupabaseAdmin();
-    const { data, error } = await admin
+    const { data, error } = await supabase
         .from('products')
         .select('*')
         .order('created_at', { ascending: false });

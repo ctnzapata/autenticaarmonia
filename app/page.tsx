@@ -1,7 +1,7 @@
 import Link from 'next/link';
 import { ArrowRight, Gem, Heart, Sparkles, Star, MapPin } from 'lucide-react';
 import ProductCard from '@/components/feature/ProductCard';
-import { getSupabaseAdmin } from '@/lib/infrastructure/supabaseAdmin';
+import { supabase } from '@/lib/infrastructure/supabase';
 
 import type { Product } from '@/lib/domain/types';
 
@@ -29,8 +29,7 @@ export const dynamic = 'force-dynamic';
 
 export default async function HomePage() {
 
-  const admin = getSupabaseAdmin();
-  const { data, error } = await admin
+  const { data, error } = await supabase
     .from('products')
     .select('*')
     .eq('in_stock', true)
