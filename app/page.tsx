@@ -2,6 +2,7 @@ import Link from 'next/link';
 import { ArrowRight, Gem, Heart, Sparkles, Star, MapPin } from 'lucide-react';
 import ProductCard from '@/components/feature/ProductCard';
 import { supabase } from '@/lib/infrastructure/supabase';
+import FadeIn from '@/components/animations/FadeIn';
 
 import type { Product } from '@/lib/domain/types';
 
@@ -46,7 +47,7 @@ export default async function HomePage() {
       <section className="hero-gradient" style={{ paddingTop: '6rem', paddingBottom: '6rem', minHeight: '90vh', display: 'flex', alignItems: 'center' }}>
         <div className="container-brand" style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '4rem', alignItems: 'center' }}>
           {/* Left: Text */}
-          <div>
+          <FadeIn direction="right">
             <div style={{ display: 'flex', alignItems: 'center', gap: '8px', marginBottom: '1.5rem' }}>
               <div style={{ background: 'var(--color-gold)', padding: '4px 14px', borderRadius: '9999px' }}>
                 <span style={{ fontSize: '0.75rem', fontWeight: 700, color: 'var(--color-navy)', letterSpacing: '0.08em' }}>
@@ -91,34 +92,36 @@ export default async function HomePage() {
                 </div>
               ))}
             </div>
-          </div>
+          </FadeIn>
 
           {/* Right: Visual */}
-          <div style={{ display: 'flex', justifyContent: 'center' }}>
-            <div style={{
-              width: '100%', maxWidth: 460, aspectRatio: '4/5',
-              background: 'linear-gradient(145deg, var(--color-teal) 0%, var(--color-teal-dark) 100%)',
-              borderRadius: '2rem',
-              display: 'flex', alignItems: 'center', justifyContent: 'center',
-              flexDirection: 'column', gap: '1rem',
-              boxShadow: '0 24px 80px rgba(0,105,92,0.3)',
-              position: 'relative', overflow: 'hidden',
-            }}>
-              {/* Decorative circles */}
-              <div style={{ position: 'absolute', top: -40, right: -40, width: 160, height: 160, background: 'rgba(219,255,255,0.1)', borderRadius: '50%' }} />
-              <div style={{ position: 'absolute', bottom: -30, left: -30, width: 120, height: 120, background: 'rgba(251,192,45,0.15)', borderRadius: '50%' }} />
+          <FadeIn direction="left" delay={0.2}>
+            <div style={{ display: 'flex', justifyContent: 'center' }}>
+              <div style={{
+                width: '100%', maxWidth: 460, aspectRatio: '4/5',
+                background: 'linear-gradient(145deg, var(--color-teal) 0%, var(--color-teal-dark) 100%)',
+                borderRadius: '2rem',
+                display: 'flex', alignItems: 'center', justifyContent: 'center',
+                flexDirection: 'column', gap: '1rem',
+                boxShadow: '0 24px 80px rgba(0,105,92,0.3)',
+                position: 'relative', overflow: 'hidden',
+              }}>
+                {/* Decorative circles */}
+                <div style={{ position: 'absolute', top: -40, right: -40, width: 160, height: 160, background: 'rgba(219,255,255,0.1)', borderRadius: '50%' }} />
+                <div style={{ position: 'absolute', bottom: -30, left: -30, width: 120, height: 120, background: 'rgba(251,192,45,0.15)', borderRadius: '50%' }} />
 
-              <Gem size={56} color="var(--color-aqua)" style={{ opacity: 0.8 }} />
-              <div style={{ textAlign: 'center', padding: '0 2rem' }}>
-                <p style={{ color: 'var(--color-aqua)', fontFamily: 'var(--font-serif)', fontSize: '1.2rem', fontWeight: 600, lineHeight: 1.5 }}>
-                  Pulseras Miyuki
-                </p>
-                <p style={{ color: 'rgba(219,255,255,0.7)', fontSize: '0.9rem', marginTop: '4px' }}>
-                  Collares Crochet · Diseños Personalizados
-                </p>
+                <Gem size={56} color="var(--color-aqua)" style={{ opacity: 0.8 }} />
+                <div style={{ textAlign: 'center', padding: '0 2rem' }}>
+                  <p style={{ color: 'var(--color-aqua)', fontFamily: 'var(--font-serif)', fontSize: '1.2rem', fontWeight: 600, lineHeight: 1.5 }}>
+                    Pulseras Miyuki
+                  </p>
+                  <p style={{ color: 'rgba(219,255,255,0.7)', fontSize: '0.9rem', marginTop: '4px' }}>
+                    Collares Crochet · Diseños Personalizados
+                  </p>
+                </div>
               </div>
             </div>
-          </div>
+          </FadeIn>
         </div>
       </section>
 
@@ -132,14 +135,16 @@ export default async function HomePage() {
               { icon: '⬡', title: 'Técnica Miyuki Delica', desc: 'Cuentas japonesas de alta precisión para diseños geométricos perfectos y durables.' },
               { icon: '♡', title: 'Tejido a Mano', desc: 'Cada pieza tejida con intención, amor y más de 5 horas de dedicación artesanal.' },
               { icon: '✦', title: '100% Personalizable', desc: 'Tu nombre, tus colores, tu historia. Diseñamos la pieza que refleja tu esencia.' },
-            ].map(({ icon, title, desc }) => (
-              <div key={title} style={{ textAlign: 'center', padding: '1.5rem' }}>
-                <div style={{ fontSize: '2rem', marginBottom: '0.75rem', color: 'var(--color-teal)' }}>{icon}</div>
-                <h3 style={{ fontFamily: 'var(--font-serif)', fontSize: '1.2rem', fontWeight: 700, color: 'var(--color-navy)', marginBottom: '0.5rem' }}>
-                  {title}
-                </h3>
-                <p style={{ color: 'var(--color-stone)', fontSize: '0.9rem', lineHeight: 1.7 }}>{desc}</p>
-              </div>
+            ].map(({ icon, title, desc }, idx) => (
+              <FadeIn key={title} delay={idx * 0.1}>
+                <div style={{ textAlign: 'center', padding: '1.5rem' }}>
+                  <div style={{ fontSize: '2rem', marginBottom: '0.75rem', color: 'var(--color-teal)' }}>{icon}</div>
+                  <h3 style={{ fontFamily: 'var(--font-serif)', fontSize: '1.2rem', fontWeight: 700, color: 'var(--color-navy)', marginBottom: '0.5rem' }}>
+                    {title}
+                  </h3>
+                  <p style={{ color: 'var(--color-stone)', fontSize: '0.9rem', lineHeight: 1.7 }}>{desc}</p>
+                </div>
+              </FadeIn>
             ))}
           </div>
         </div>
@@ -150,18 +155,24 @@ export default async function HomePage() {
           ================================================ */}
       <section style={{ padding: '6rem 0', background: '#fff' }}>
         <div className="container-brand">
-          <div style={{ textAlign: 'center', marginBottom: '3.5rem' }}>
-            <div className="gold-divider" style={{ margin: '0 auto 1rem' }} />
-            <h2 style={{ fontFamily: 'var(--font-serif)', fontSize: 'clamp(2rem, 4vw, 3rem)', fontWeight: 700, color: 'var(--color-navy)' }}>
-              Nuestra Colección
-            </h2>
-            <p style={{ color: 'var(--color-stone)', marginTop: '0.75rem', fontSize: '1rem' }}>
-              Piezas seleccionadas, creadas con los más altos estándares artesanales
-            </p>
-          </div>
+          <FadeIn>
+            <div style={{ textAlign: 'center', marginBottom: '3.5rem' }}>
+              <div className="gold-divider" style={{ margin: '0 auto 1rem' }} />
+              <h2 style={{ fontFamily: 'var(--font-serif)', fontSize: 'clamp(2rem, 4vw, 3rem)', fontWeight: 700, color: 'var(--color-navy)' }}>
+                Nuestra Colección
+              </h2>
+              <p style={{ color: 'var(--color-stone)', marginTop: '0.75rem', fontSize: '1rem' }}>
+                Piezas seleccionadas, creadas con los más altos estándares artesanales
+              </p>
+            </div>
+          </FadeIn>
 
           <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fill, minmax(280px, 1fr))', gap: '1.75rem', marginBottom: '3rem' }}>
-            {featured.map(p => <ProductCard key={p.id} product={p} />)}
+            {featured.map((p, idx) => (
+              <FadeIn key={p.id} delay={idx * 0.1}>
+                <ProductCard product={p} />
+              </FadeIn>
+            ))}
           </div>
 
           <div style={{ textAlign: 'center' }}>
@@ -176,35 +187,39 @@ export default async function HomePage() {
           CUSTOMIZATION CTA
           ================================================ */}
       <section className="section-navy" style={{ padding: '6rem 0' }}>
-        <div className="container-brand" style={{ textAlign: 'center', maxWidth: 720, margin: '0 auto' }}>
-          <Sparkles size={40} color="var(--color-gold)" style={{ marginBottom: '1.5rem' }} />
-          <h2 style={{
-            fontFamily: 'var(--font-serif)', fontSize: 'clamp(2rem, 4vw, 3rem)',
-            fontWeight: 700, color: '#fff', marginBottom: '1.25rem',
-          }}>
-            Crea Tu Pieza Única
-          </h2>
-          <p style={{ color: '#94A3B8', fontSize: '1.1rem', lineHeight: 1.7, marginBottom: '2rem' }}>
-            Elige tus colores, agrega tus iniciales, cuéntanos tu historia.
-            Nuestras artesanas tejen tu visión con amor y precisión.
-          </p>
-          <Link href="/catalogo" className="btn btn-gold" style={{ fontSize: '1.05rem', padding: '1rem 2.5rem' }}>
-            Empieza tu Diseño →
-          </Link>
-        </div>
+        <FadeIn>
+          <div className="container-brand" style={{ textAlign: 'center', maxWidth: 720, margin: '0 auto' }}>
+            <Sparkles size={40} color="var(--color-gold)" style={{ marginBottom: '1.5rem' }} />
+            <h2 style={{
+              fontFamily: 'var(--font-serif)', fontSize: 'clamp(2rem, 4vw, 3rem)',
+              fontWeight: 700, color: '#fff', marginBottom: '1.25rem',
+            }}>
+              Crea Tu Pieza Única
+            </h2>
+            <p style={{ color: '#94A3B8', fontSize: '1.1rem', lineHeight: 1.7, marginBottom: '2rem' }}>
+              Elige tus colores, agrega tus iniciales, cuéntanos tu historia.
+              Nuestras artesanas tejen tu visión con amor y precisión.
+            </p>
+            <Link href="/catalogo" className="btn btn-gold" style={{ fontSize: '1.05rem', padding: '1rem 2.5rem' }}>
+              Empieza tu Diseño →
+            </Link>
+          </div>
+        </FadeIn>
       </section>
 
       {/* ================================================
           MADE IN MEDELLÍN
           ================================================ */}
       <section className="section-aqua" style={{ padding: '4rem 0' }}>
-        <div className="container-brand" style={{ display: 'flex', alignItems: 'center', justifyContent: 'center', gap: '1rem', flexWrap: 'wrap' }}>
-          <MapPin size={20} color="var(--color-teal)" />
-          <p style={{ fontFamily: 'var(--font-serif)', fontSize: '1.25rem', fontWeight: 600, color: 'var(--color-navy)' }}>
-            Tejiendo buena energía — desde el corazón de <em style={{ color: 'var(--color-teal)' }}>Medellín, Colombia</em>
-          </p>
-          <Heart size={16} fill="var(--color-gold)" color="var(--color-gold)" />
-        </div>
+        <FadeIn direction='up'>
+          <div className="container-brand" style={{ display: 'flex', alignItems: 'center', justifyContent: 'center', gap: '1rem', flexWrap: 'wrap' }}>
+            <MapPin size={20} color="var(--color-teal)" />
+            <p style={{ fontFamily: 'var(--font-serif)', fontSize: '1.25rem', fontWeight: 600, color: 'var(--color-navy)' }}>
+              Tejiendo buena energía — desde el corazón de <em style={{ color: 'var(--color-teal)' }}>Medellín, Colombia</em>
+            </p>
+            <Heart size={16} fill="var(--color-gold)" color="var(--color-gold)" />
+          </div>
+        </FadeIn>
       </section>
     </>
   );

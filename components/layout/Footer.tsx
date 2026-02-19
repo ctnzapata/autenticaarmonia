@@ -18,7 +18,7 @@ export default function Footer() {
                         </p>
                         <div style={{ display: 'flex', alignItems: 'center', gap: '1rem', marginTop: '1.5rem' }}>
                             <div style={{ display: 'flex', gap: '0.75rem' }}>
-                                <a href="https://instagram.com" target="_blank" rel="noopener noreferrer" style={iconStyle}>
+                                <a href="https://www.instagram.com/autenticaarmonia?utm_source=qr&igsh=MTJwZTZiMHU1dWN4eA%3D%3D" target="_blank" rel="noopener noreferrer" style={iconStyle}>
                                     <Instagram size={18} />
                                 </a>
                                 <a href="https://wa.me/573007414990" target="_blank" rel="noopener noreferrer" style={{ ...iconStyle, background: 'var(--color-whatsapp)' }}>
