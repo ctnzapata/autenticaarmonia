@@ -70,3 +70,29 @@ Formato basado en [Keep a Changelog](https://keepachangelog.com/es/1.0.0/).
 - `[0.2.0]` Admin: CRUD de Productos, Bandeja de Pedidos WhatsApp, página de Personalizaciones
 - `[0.3.0]` Integración Supabase (datos reales), autenticación admin
 - `[0.4.0]` Animaciones Framer Motion, optimización de imágenes, SEO dinámico
+
+---
+
+## [0.3.0] — 2026-02-19
+
+### ✨ Añadido (Integración Supabase)
+
+#### Backend & Base de Datos
+- **Supabase Integration:** Configuración completa del cliente (`lib/infrastructure/supabase.ts`) y `supabaseAdmin` para operaciones privilegiadas
+- **Database Schema:** Tablas `products` y `orders` con políticas RLS y triggers de `updated_at`
+- **Storage:** Bucket `products` configurado públicamente para alojar imágenes de productos
+
+#### Admin Panel (Productos)
+- **CRUD Completo:** Crear, Leer, Actualizar y Eliminar productos conectados a Supabase
+- **Image Upload:** Subida de imágenes drag & drop o selección de archvo, con visualización inmediata
+- **Feedback UI:** Notificaciones de éxito/error, estados de carga y confirmaciones de eliminación
+
+#### API Routes
+- `GET /api/products`: Filtrado por técnica y búsqueda por nombre
+- `POST /api/products`: Creación de productos con slug automático y soporte para arrays de imágenes
+- `PUT/DELETE /api/products/[id]`: Edición y eliminación segura de productos
+
+### 🔧 Corregido
+- Solucionado bug crítico donde el backend (POST/PUT) ignoraba el campo `images` y no guardaba las URLs
+- Corregido `ProductCard` y `ProductoClient` para renderizar imágenes reales (`<img>`) en lugar de placeholders estáticos
+

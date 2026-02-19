@@ -37,21 +37,36 @@ export default function ProductCard({ product }: ProductCardProps) {
                     background: PLACEHOLDER_BG[bgIndex],
                     overflow: 'hidden',
                 }}>
-                    {/* Decorative pattern in placeholder */}
-                    <div style={{
-                        position: 'absolute', inset: 0,
-                        display: 'flex', alignItems: 'center', justifyContent: 'center',
-                        flexDirection: 'column', gap: '0.5rem',
-                    }}>
-                        <div style={{ fontSize: '2.5rem', opacity: 0.3 }}>✦</div>
-                        <span style={{
-                            fontFamily: 'var(--font-serif)', fontSize: '0.85rem',
-                            color: 'var(--color-teal-dark)', opacity: 0.6,
-                            textAlign: 'center', padding: '0 1rem',
+                    {/* Render Image if exists */}
+                    {product.images && product.images.length > 0 ? (
+                        <img
+                            src={product.images[0]}
+                            alt={product.name}
+                            style={{ width: '100%', height: '100%', objectFit: 'cover' }}
+                            // Debug logs
+                            onLoad={() => console.log(`Imagen cargada OK: ${product.name}`, product.images[0])}
+                            onError={(e) => {
+                                console.error(`ERROR cargando imagen para ${product.name}:`, product.images[0]);
+                                e.currentTarget.style.display = 'none';
+                            }}
+                        />
+                    ) : (
+                        /* Decorative pattern in placeholder (Fallback) */
+                        <div style={{
+                            position: 'absolute', inset: 0,
+                            display: 'flex', alignItems: 'center', justifyContent: 'center',
+                            flexDirection: 'column', gap: '0.5rem',
                         }}>
-                            {product.name}
-                        </span>
-                    </div>
+                            <div style={{ fontSize: '2.5rem', opacity: 0.3 }}>✦</div>
+                            <span style={{
+                                fontFamily: 'var(--font-serif)', fontSize: '0.85rem',
+                                color: 'var(--color-teal-dark)', opacity: 0.6,
+                                textAlign: 'center', padding: '0 1rem',
+                            }}>
+                                {product.name}
+                            </span>
+                        </div>
+                    )}
 
                     {/* Technique badge */}
                     <div style={{
@@ -59,6 +74,7 @@ export default function ProductCard({ product }: ProductCardProps) {
                         ...tech,
                         padding: '3px 10px', borderRadius: '9999px',
                         fontSize: '0.65rem', fontWeight: 700, letterSpacing: '0.08em',
+                        zIndex: 2
                     }}>
                         {product.technique}
                     </div>
@@ -70,6 +86,7 @@ export default function ProductCard({ product }: ProductCardProps) {
                             background: '#E53935', color: '#fff',
                             padding: '3px 8px', borderRadius: '9999px',
                             fontSize: '0.65rem', fontWeight: 700, letterSpacing: '0.06em',
+                            zIndex: 2
                         }}>
                             NUEVO
                         </div>
@@ -82,6 +99,7 @@ export default function ProductCard({ product }: ProductCardProps) {
                         borderRadius: '50%', width: 30, height: 30,
                         display: 'flex', alignItems: 'center', justifyContent: 'center',
                         cursor: 'pointer', boxShadow: '0 2px 8px rgba(0,0,0,0.1)',
+                        zIndex: 2
                     }}
                         onClick={e => e.preventDefault()}
                     >

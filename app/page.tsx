@@ -1,10 +1,43 @@
 import Link from 'next/link';
 import { ArrowRight, Gem, Heart, Sparkles, Star, MapPin } from 'lucide-react';
 import ProductCard from '@/components/feature/ProductCard';
-import { getFeaturedProducts } from '@/lib/infrastructure/mockRepository';
+import { getSupabaseAdmin } from '@/lib/infrastructure/supabaseAdmin';
 
-export default function HomePage() {
-  const featured = getFeaturedProducts(3);
+import type { Product } from '@/lib/domain/types';
+
+function mapProduct(row: Record<string, unknown>): Product {
+  return {
+    id: String(row.id),
+    slug: row.slug as string,
+    name: row.name as string,
+    description: (row.description as string) ?? '',
+    price: row.price as number,
+    technique: row.technique as Product['technique'],
+    category: (row.category as string) ?? '',
+    images: (row.images as string[]) ?? [],
+    colors: (row.colors as Product['colors']) ?? [],
+    sizes: (row.sizes as Product['sizes']) ?? [],
+    rating: row.rating as number,
+    reviewCount: row.review_count as number,
+    isNew: row.is_new as boolean,
+    isCustomizable: row.is_customizable as boolean,
+    inStock: row.in_stock as boolean,
+  };
+}
+
+export const dynamic = 'force-dynamic';
+
+export default async function HomePage() {
+
+  const admin = getSupabaseAdmin();
+  const { data, error } = await admin
+    .from('products')
+    .select('*')
+    .eq('in_stock', true)
+    .order('created_at', { ascending: false })
+    .limit(3);
+
+  const featured: Product[] = error ? [] : (data ?? []).map(r => mapProduct(r as Record<string, unknown>));
 
   return (
     <>

@@ -1,171 +1,189 @@
 'use client';
 
-import { useState } from 'react';
-import { MessageCircle, ChevronDown } from 'lucide-react';
-import { mockOrders } from '@/lib/infrastructure/mockRepository';
-import { type Order, type OrderStatus, formatCOP } from '@/lib/domain/types';
-import { generateWhatsAppLink } from '@/lib/application/generateWhatsAppLink';
+import { useState, useEffect, useCallback } from 'react';
+import { MessageCircle, ChevronDown, Loader2, AlertTriangle } from 'lucide-react';
+import { type OrderStatus, formatCOP } from '@/lib/domain/types';
+
+interface DBOrder {
+    id: number;
+    customer_name: string;
+    customer_phone: string;
+    product: { id: number; name: string; slug: string; price: number; technique: string } | null;
+    customization: Record<string, unknown>;
+    total_amount: number;
+    status: OrderStatus;
+    notes: string | null;
+    created_at: string;
+}
 
 const STATUSES: { value: OrderStatus; label: string; bg: string; color: string }[] = [
-    { value: 'PENDING', label: 'Pendiente', bg: '#FFF3CD', color: '#856404' },
-    { value: 'CONFIRMED', label: 'Confirmado', bg: '#D4EDDA', color: '#155724' },
-    { value: 'IN_PROGRESS', label: 'En proceso', bg: '#CCE5FF', color: '#004085' },
-    { value: 'SHIPPED', label: 'Enviado', bg: '#D1ECF1', color: '#0C5460' },
-    { value: 'DELIVERED', label: 'Entregado', bg: '#D4EDDA', color: '#155724' },
+    { value: 'PENDING', label: 'Pendiente', bg: '#FEF3C7', color: '#92400E' },
+    { value: 'CONFIRMED', label: 'Confirmado', bg: '#DBEAFE', color: '#1E40AF' },
+    { value: 'IN_PROGRESS', label: 'En proceso', bg: '#F3E8FF', color: '#6B21A8' },
+    { value: 'SHIPPED', label: 'Enviado', bg: '#E0F2FE', color: '#0369A1' },
+    { value: 'DELIVERED', label: 'Entregado', bg: '#DCFCE7', color: '#14532D' },
 ];
-
 const getStatus = (v: OrderStatus) => STATUSES.find(s => s.value === v)!;
 
+const formatDate = (d: string) =>
+    new Intl.DateTimeFormat('es-CO', { day: '2-digit', month: 'short', hour: '2-digit', minute: '2-digit' }).format(new Date(d));
+
 export default function AdminPedidosPage() {
-    const [orders, setOrders] = useState<Order[]>(mockOrders);
+    const [orders, setOrders] = useState<DBOrder[]>([]);
+    const [loading, setLoading] = useState(true);
     const [activeFilter, setActiveFilter] = useState<OrderStatus | 'ALL'>('ALL');
-    const [openDropdown, setOpenDropdown] = useState<string | null>(null);
+    const [openDropdown, setOpenDropdown] = useState<number | null>(null);
+    const [error, setError] = useState<string | null>(null);
 
-    const filtered = activeFilter === 'ALL'
-        ? orders
-        : orders.filter(o => o.status === activeFilter);
+    // ─── Fetch orders from API ────────────────────────────
+    const fetchOrders = useCallback(async () => {
+        setLoading(true);
+        try {
+            const res = await fetch('/api/orders');
+            if (!res.ok) throw new Error('Error cargando pedidos');
+            const data: DBOrder[] = await res.json();
+            setOrders(data);
+        } catch (e) {
+            setError(e instanceof Error ? e.message : 'Error desconocido');
+        } finally {
+            setLoading(false);
+        }
+    }, []);
 
-    const updateStatus = (id: string, status: OrderStatus) => {
-        setOrders(prev => prev.map(o => o.id === id ? { ...o, status } : o));
+    useEffect(() => { fetchOrders(); }, [fetchOrders]);
+
+    // ─── Update order status ──────────────────────────────
+    const updateStatus = async (id: number, status: OrderStatus) => {
         setOpenDropdown(null);
+        setError(null);
+        try {
+            const res = await fetch(`/api/orders/${id}`, {
+                method: 'PUT',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ status }),
+            });
+            if (!res.ok) throw new Error('Error actualizando estado');
+            // Update local state immediately (optimistic)
+            setOrders(prev => prev.map(o => o.id === id ? { ...o, status } : o));
+        } catch (e) {
+            setError(e instanceof Error ? e.message : 'Error actualizando');
+            fetchOrders(); // Revert: reload from server
+        }
     };
 
-    const formatDate = (d: Date) =>
-        new Intl.DateTimeFormat('es-CO', { day: 'numeric', month: 'short', hour: '2-digit', minute: '2-digit' }).format(d);
+    const filtered = activeFilter === 'ALL' ? orders : orders.filter(o => o.status === activeFilter);
+
+    const TD: React.CSSProperties = { padding: '0.9rem 1rem', borderBottom: '1px solid #F1F5F9', fontSize: '0.875rem', color: '#334155', verticalAlign: 'middle' };
+    const TH: React.CSSProperties = { padding: '0.75rem 1rem', fontSize: '0.75rem', fontWeight: 700, color: '#64748B', textTransform: 'uppercase', letterSpacing: '0.05em', borderBottom: '2px solid #E2E8F0' };
 
     return (
         <>
-            {/* Stats row */}
-            <div style={{ display: 'grid', gridTemplateColumns: 'repeat(5, 1fr)', gap: '0.75rem', marginBottom: '1.5rem' }}>
-                {[{ value: 'ALL', label: 'Todos', count: orders.length, bg: 'var(--color-navy)', color: '#fff' },
-                ...STATUSES.map(s => ({ ...s, count: orders.filter(o => o.status === s.value).length }))
-                ].map(s => (
-                    <button key={s.value} onClick={() => setActiveFilter(s.value as OrderStatus | 'ALL')}
-                        style={{
-                            padding: '0.75rem 0.5rem', borderRadius: '0.6rem', border: 'none', cursor: 'pointer',
-                            background: activeFilter === s.value ? s.bg : '#fff',
-                            color: activeFilter === s.value ? s.color : 'var(--color-stone)',
-                            boxShadow: '0 1px 6px rgba(15,23,42,0.07)',
-                            transition: 'all 0.15s', display: 'flex', flexDirection: 'column', alignItems: 'center', gap: '4px',
-                        }}>
-                        <span style={{ fontSize: '1.4rem', fontWeight: 800 }}>{s.count}</span>
-                        <span style={{ fontSize: '0.7rem', fontWeight: 600 }}>{s.label}</span>
-                    </button>
-                ))}
+            {/* Stats / Filter row */}
+            <div style={{ display: 'flex', gap: '0.75rem', flexWrap: 'wrap', marginBottom: '1.5rem' }}>
+                {[{ value: 'ALL' as const, label: 'Todos', bg: '#F1F5F9', color: '#475569' }, ...STATUSES].map(s => {
+                    const count = s.value === 'ALL' ? orders.length : orders.filter(o => o.status === s.value).length;
+                    return (
+                        <button key={s.value} onClick={() => setActiveFilter(s.value)}
+                            style={{
+                                padding: '6px 16px', borderRadius: '9999px', cursor: 'pointer',
+                                border: `2px solid ${activeFilter === s.value ? s.color : 'transparent'}`,
+                                background: activeFilter === s.value ? s.bg : '#F8FAFC',
+                                color: activeFilter === s.value ? s.color : '#64748B',
+                                fontSize: '0.825rem', fontWeight: 600, transition: 'all 0.15s',
+                            }}>
+                            {s.label} <span style={{ opacity: 0.8 }}>({count})</span>
+                        </button>
+                    );
+                })}
             </div>
 
-            {/* Tabla de pedidos */}
-            <div style={{ background: '#fff', borderRadius: '0.75rem', boxShadow: '0 1px 8px rgba(15,23,42,0.06)', overflow: 'visible' }}>
-                <table style={{ width: '100%', borderCollapse: 'collapse' }}>
-                    <thead>
-                        <tr style={{ background: '#F8FAFC', borderBottom: '2px solid var(--color-border)' }}>
-                            {['ID', 'Cliente', 'Producto', 'Total', 'Estado', 'Fecha', 'Acción'].map(h => (
-                                <th key={h} style={{ textAlign: 'left', padding: '0.85rem 1rem', fontSize: '0.75rem', color: 'var(--color-stone)', fontWeight: 700, textTransform: 'uppercase', letterSpacing: '0.05em', whiteSpace: 'nowrap' }}>
-                                    {h}
-                                </th>
-                            ))}
-                        </tr>
-                    </thead>
-                    <tbody>
-                        {filtered.length === 0 ? (
-                            <tr><td colSpan={7} style={{ textAlign: 'center', padding: '3rem', color: 'var(--color-stone)' }}>No hay pedidos en esta categoría</td></tr>
-                        ) : filtered.map(order => {
-                            const st = getStatus(order.status);
-                            const waLink = generateWhatsAppLink(order.product, order.customization);
-                            return (
-                                <tr key={order.id} style={{ borderBottom: '1px solid var(--color-border)' }}>
-                                    {/* ID */}
-                                    <td style={{ padding: '0.85rem 1rem', fontSize: '0.78rem', color: 'var(--color-stone)', fontFamily: 'monospace' }}>
-                                        {order.id}
-                                    </td>
-
-                                    {/* Cliente */}
-                                    <td style={{ padding: '0.85rem 1rem' }}>
-                                        <p style={{ fontSize: '0.875rem', fontWeight: 600, color: 'var(--color-navy)', marginBottom: '2px' }}>{order.customerName}</p>
-                                        <p style={{ fontSize: '0.75rem', color: 'var(--color-stone)' }}>{order.customerPhone}</p>
-                                    </td>
-
-                                    {/* Producto */}
-                                    <td style={{ padding: '0.85rem 1rem', fontSize: '0.85rem', color: 'var(--color-navy)' }}>
-                                        <p style={{ fontWeight: 500 }}>{order.product.name}</p>
-                                        {order.customization.initials && (
-                                            <p style={{ fontSize: '0.75rem', color: 'var(--color-stone)' }}>✦ Iniciales: {order.customization.initials}</p>
-                                        )}
-                                    </td>
-
-                                    {/* Total */}
-                                    <td style={{ padding: '0.85rem 1rem', fontWeight: 700, color: 'var(--color-teal)', fontSize: '0.875rem' }}>
-                                        {formatCOP(order.totalAmount)}
-                                    </td>
-
-                                    {/* Estado (dropdown) */}
-                                    <td style={{ padding: '0.85rem 1rem', position: 'relative' }}>
-                                        <button onClick={() => setOpenDropdown(openDropdown === order.id ? null : order.id)}
-                                            style={{
-                                                display: 'flex', alignItems: 'center', gap: '6px',
-                                                background: st.bg, color: st.color,
-                                                padding: '4px 12px', borderRadius: '9999px',
-                                                border: 'none', cursor: 'pointer', fontSize: '0.75rem', fontWeight: 700,
-                                            }}>
-                                            {st.label} <ChevronDown size={12} />
-                                        </button>
-
-                                        {openDropdown === order.id && (
-                                            <div style={{
-                                                position: 'absolute', top: '100%', left: 0, zIndex: 50,
-                                                background: '#fff', borderRadius: '0.6rem',
-                                                boxShadow: '0 8px 32px rgba(0,0,0,0.15)',
-                                                border: '1px solid var(--color-border)', minWidth: 160, overflow: 'hidden',
-                                            }}>
-                                                {STATUSES.map(s => (
-                                                    <button key={s.value} onClick={() => updateStatus(order.id, s.value)}
-                                                        style={{
-                                                            display: 'flex', alignItems: 'center', gap: '8px',
-                                                            width: '100%', padding: '0.6rem 1rem', border: 'none',
-                                                            background: order.status === s.value ? s.bg : 'transparent',
-                                                            color: order.status === s.value ? s.color : 'var(--color-navy)',
-                                                            cursor: 'pointer', fontSize: '0.825rem', fontWeight: order.status === s.value ? 700 : 400,
-                                                            textAlign: 'left', transition: 'background 0.1s',
-                                                        }}
-                                                        onMouseEnter={e => !order.status.includes(s.value) && (e.currentTarget.style.background = '#F8FAFC')}
-                                                        onMouseLeave={e => !order.status.includes(s.value) && (e.currentTarget.style.background = 'transparent')}
-                                                    >
-                                                        <span style={{ width: 8, height: 8, borderRadius: '50%', background: s.color, display: 'inline-block' }} />
-                                                        {s.label}
-                                                    </button>
-                                                ))}
-                                            </div>
-                                        )}
-                                    </td>
-
-                                    {/* Fecha */}
-                                    <td style={{ padding: '0.85rem 1rem', fontSize: '0.8rem', color: 'var(--color-stone)', whiteSpace: 'nowrap' }}>
-                                        {formatDate(order.createdAt)}
-                                    </td>
-
-                                    {/* WhatsApp */}
-                                    <td style={{ padding: '0.85rem 1rem' }}>
-                                        <a href={waLink} target="_blank" rel="noopener noreferrer"
-                                            style={{
-                                                display: 'inline-flex', alignItems: 'center', gap: '6px',
-                                                background: 'var(--color-whatsapp)', color: '#fff',
-                                                padding: '6px 12px', borderRadius: '9999px',
-                                                fontSize: '0.78rem', fontWeight: 600, textDecoration: 'none',
-                                            }}>
-                                            <MessageCircle size={13} /> Responder
-                                        </a>
-                                    </td>
-                                </tr>
-                            );
-                        })}
-                    </tbody>
-                </table>
-                <div style={{ padding: '0.75rem 1rem', borderTop: '1px solid var(--color-border)', background: '#F8FAFC' }}>
-                    <p style={{ fontSize: '0.78rem', color: 'var(--color-stone)' }}>
-                        <strong>{filtered.length}</strong> pedidos · Total: <strong>{formatCOP(filtered.reduce((s, o) => s + o.totalAmount, 0))}</strong>
-                    </p>
+            {/* Error */}
+            {error && (
+                <div style={{ display: 'flex', alignItems: 'center', gap: '8px', background: '#FEE2E2', borderRadius: '0.5rem', padding: '0.75rem 1rem', marginBottom: '1rem', color: '#DC2626', fontSize: '0.875rem' }}>
+                    <AlertTriangle size={16} /> {error}
                 </div>
+            )}
+
+            {/* Orders table */}
+            <div style={{ background: '#fff', borderRadius: '1rem', overflow: 'hidden', boxShadow: '0 1px 3px rgba(0,0,0,0.08)', position: 'relative' }}>
+                {loading ? (
+                    <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'center', gap: '8px', padding: '3rem', color: '#94A3B8' }}>
+                        <Loader2 size={20} style={{ animation: 'spin 1s linear infinite' }} /> Cargando pedidos...
+                    </div>
+                ) : (
+                    <table style={{ width: '100%', borderCollapse: 'collapse' }}>
+                        <thead>
+                            <tr style={{ background: '#F8FAFC' }}>
+                                <th style={TH}>#</th>
+                                <th style={TH}>Cliente</th>
+                                <th style={TH}>Producto</th>
+                                <th style={TH}>Total</th>
+                                <th style={TH}>Estado</th>
+                                <th style={TH}>Fecha</th>
+                                <th style={{ ...TH, textAlign: 'right' }}>Acciones</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            {filtered.length === 0 ? (
+                                <tr><td colSpan={7} style={{ ...TD, textAlign: 'center', color: '#94A3B8', padding: '3rem' }}>
+                                    {orders.length === 0 ? 'Aún no hay pedidos recibidos.' : 'No hay pedidos con este estado.'}
+                                </td></tr>
+                            ) : filtered.map(order => {
+                                const st = getStatus(order.status);
+                                const whatsapp = `https://wa.me/${order.customer_phone.replace(/\D/g, '')}?text=${encodeURIComponent(`Hola ${order.customer_name}, tu pedido de "${order.product?.name ?? 'producto'}" está ${st.label.toLowerCase()}.`)}`;
+                                return (
+                                    <tr key={order.id}>
+                                        <td style={{ ...TD, fontWeight: 700, color: '#94A3B8', fontSize: '0.75rem' }}>#{order.id}</td>
+                                        <td style={TD}>
+                                            <div style={{ fontWeight: 600, color: '#0F172A' }}>{order.customer_name}</div>
+                                            <div style={{ fontSize: '0.78rem', color: '#94A3B8' }}>{order.customer_phone}</div>
+                                        </td>
+                                        <td style={TD}>{order.product?.name ?? '—'}</td>
+                                        <td style={{ ...TD, fontWeight: 700, color: '#00695C' }}>{formatCOP(order.total_amount)}</td>
+                                        <td style={{ ...TD, position: 'relative' }}>
+                                            <button onClick={() => setOpenDropdown(openDropdown === order.id ? null : order.id)}
+                                                style={{ display: 'flex', alignItems: 'center', gap: '6px', padding: '4px 10px', borderRadius: '9999px', background: st.bg, color: st.color, border: 'none', cursor: 'pointer', fontSize: '0.78rem', fontWeight: 700 }}>
+                                                {st.label} <ChevronDown size={12} />
+                                            </button>
+                                            {openDropdown === order.id && (
+                                                <div style={{ position: 'absolute', top: '100%', left: '1rem', zIndex: 20, background: '#fff', borderRadius: '0.5rem', boxShadow: '0 8px 30px rgba(0,0,0,0.12)', overflow: 'hidden', minWidth: 160 }}>
+                                                    {STATUSES.map(s => (
+                                                        <button key={s.value} onClick={() => updateStatus(order.id, s.value)}
+                                                            style={{ display: 'block', width: '100%', textAlign: 'left', padding: '8px 14px', background: s.value === order.status ? s.bg : '#fff', color: s.value === order.status ? s.color : '#334155', fontSize: '0.825rem', fontWeight: s.value === order.status ? 700 : 400, border: 'none', cursor: 'pointer' }}>
+                                                            {s.label}
+                                                        </button>
+                                                    ))}
+                                                </div>
+                                            )}
+                                        </td>
+                                        <td style={{ ...TD, fontSize: '0.78rem', color: '#94A3B8' }}>{formatDate(order.created_at)}</td>
+                                        <td style={{ ...TD, textAlign: 'right' }}>
+                                            <a href={whatsapp} target="_blank" rel="noopener noreferrer"
+                                                style={{ display: 'inline-flex', alignItems: 'center', gap: '5px', padding: '6px 12px', background: '#25D366', color: '#fff', borderRadius: '0.4rem', fontSize: '0.78rem', fontWeight: 600, textDecoration: 'none' }}>
+                                                <MessageCircle size={13} /> Responder
+                                            </a>
+                                        </td>
+                                    </tr>
+                                );
+                            })}
+                        </tbody>
+                    </table>
+                )}
             </div>
+
+            {/* Total revenue */}
+            {!loading && filtered.length > 0 && (
+                <div style={{ display: 'flex', justifyContent: 'flex-end', marginTop: '1rem' }}>
+                    <div style={{ background: '#fff', borderRadius: '0.75rem', padding: '0.75rem 1.25rem', boxShadow: '0 1px 3px rgba(0,0,0,0.08)', fontSize: '0.875rem', color: '#64748B' }}>
+                        Total ({filtered.length} pedidos):{' '}
+                        <strong style={{ color: '#00695C', fontSize: '1rem' }}>
+                            {formatCOP(filtered.reduce((sum, o) => sum + o.total_amount, 0))}
+                        </strong>
+                    </div>
+                </div>
+            )}
+
+            <style>{`@keyframes spin { to { transform: rotate(360deg); } }`}</style>
         </>
     );
 }
