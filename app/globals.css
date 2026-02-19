@@ -1,0 +1,284 @@
+@import "tailwindcss";
+
+/* =============================================
+   AUTÉNTICA ARMONÍA — Design System Tokens
+   "Organic Luxury" Color Palette
+   ============================================= */
+
+:root {
+  /* Brand Colors */
+  --color-teal: #00695C;
+  --color-teal-light: #00897B;
+  --color-teal-dark: #004D40;
+  --color-navy: #0F172A;
+  --color-navy-mid: #1E293B;
+  --color-gold: #FBC02D;
+  --color-gold-light: #FDD835;
+  --color-aqua: #DBFFFF;
+  --color-aqua-mid: #B2F5F5;
+
+  /* Neutrals */
+  --color-white-warm: #FAFAF9;
+  --color-stone: #78716C;
+  --color-stone-light: #A8A29E;
+  --color-border: #E7E5E4;
+
+  /* WhatsApp */
+  --color-whatsapp: #25D366;
+
+  /* Semantic */
+  --background: var(--color-white-warm);
+  --foreground: var(--color-navy);
+
+  /* Typography */
+  --font-serif: 'Cormorant Garamond', Georgia, serif;
+  --font-sans: 'Outfit', system-ui, sans-serif;
+
+  /* Spacing */
+  --container-max: 1280px;
+  --section-py: 5rem;
+}
+
+@theme inline {
+  --color-background: var(--background);
+  --color-foreground: var(--foreground);
+  --font-sans: var(--font-sans);
+
+  /* Expose brand colors to Tailwind */
+  --color-teal: #00695C;
+  --color-teal-light: #00897B;
+  --color-teal-dark: #004D40;
+  --color-navy: #0F172A;
+  --color-navy-mid: #1E293B;
+  --color-gold: #FBC02D;
+  --color-aqua: #DBFFFF;
+  --color-aqua-mid: #B2F5F5;
+  --color-stone: #78716C;
+  --color-white-warm: #FAFAF9;
+  --color-border: #E7E5E4;
+  --color-whatsapp: #25D366;
+}
+
+/* =============================================
+   BASE STYLES
+   ============================================= */
+
+*,
+*::before,
+*::after {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+}
+
+html {
+  scroll-behavior: smooth;
+}
+
+body {
+  background: var(--color-white-warm);
+  color: var(--color-navy);
+  font-family: var(--font-sans);
+  font-size: 16px;
+  line-height: 1.6;
+  -webkit-font-smoothing: antialiased;
+}
+
+/* =============================================
+   TYPOGRAPHY UTILITIES
+   ============================================= */
+
+.font-serif {
+  font-family: var(--font-serif);
+}
+
+.font-sans {
+  font-family: var(--font-sans);
+}
+
+h1,
+h2,
+h3 {
+  font-family: var(--font-serif);
+  font-weight: 600;
+  line-height: 1.15;
+}
+
+h4,
+h5,
+h6 {
+  font-family: var(--font-sans);
+  font-weight: 600;
+}
+
+/* =============================================
+   COMPONENT UTILITIES
+   ============================================= */
+
+.container-brand {
+  max-width: var(--container-max);
+  margin: 0 auto;
+  padding-left: 1.5rem;
+  padding-right: 1.5rem;
+}
+
+/* Badge style */
+.badge {
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+  padding: 2px 10px;
+  border-radius: 9999px;
+  font-size: 0.7rem;
+  font-weight: 700;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+}
+
+.badge-teal {
+  background: var(--color-teal);
+  color: #fff;
+}
+
+.badge-gold {
+  background: var(--color-gold);
+  color: var(--color-navy);
+}
+
+.badge-navy {
+  background: var(--color-navy);
+  color: #fff;
+}
+
+.badge-aqua {
+  background: var(--color-aqua);
+  color: var(--color-teal-dark);
+  border: 1px solid var(--color-aqua-mid);
+}
+
+/* Buttons */
+.btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  padding: 0.7rem 1.75rem;
+  border-radius: 9999px;
+  font-family: var(--font-sans);
+  font-size: 0.9rem;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  text-decoration: none;
+  border: 2px solid transparent;
+}
+
+.btn-primary {
+  background: var(--color-teal);
+  color: #fff;
+}
+
+.btn-primary:hover {
+  background: var(--color-teal-light);
+  transform: translateY(-1px);
+  box-shadow: 0 6px 20px rgba(0, 105, 92, 0.35);
+}
+
+.btn-outline {
+  background: transparent;
+  color: var(--color-teal);
+  border-color: var(--color-teal);
+}
+
+.btn-outline:hover {
+  background: var(--color-teal);
+  color: #fff;
+  transform: translateY(-1px);
+}
+
+.btn-whatsapp {
+  background: var(--color-whatsapp);
+  color: #fff;
+  font-size: 1rem;
+  padding: 0.85rem 2rem;
+}
+
+.btn-whatsapp:hover {
+  background: #20ba5a;
+  transform: translateY(-2px);
+  box-shadow: 0 8px 24px rgba(37, 211, 102, 0.4);
+}
+
+.btn-gold {
+  background: var(--color-gold);
+  color: var(--color-navy);
+}
+
+.btn-gold:hover {
+  background: var(--color-gold-light);
+  transform: translateY(-1px);
+}
+
+/* Cards */
+.card {
+  background: #fff;
+  border-radius: 1rem;
+  overflow: hidden;
+  transition: transform 0.25s ease, box-shadow 0.25s ease;
+}
+
+.card:hover {
+  transform: translateY(-4px);
+  box-shadow: 0 16px 40px rgba(15, 23, 42, 0.12);
+}
+
+/* Section dividers */
+.section-aqua {
+  background: var(--color-aqua);
+}
+
+.section-navy {
+  background: var(--color-navy);
+}
+
+.section-teal {
+  background: var(--color-teal);
+}
+
+.section-white {
+  background: #fff;
+}
+
+/* Gradient hero */
+.hero-gradient {
+  background: linear-gradient(135deg, var(--color-aqua) 0%, #f0fffe 50%, var(--color-white-warm) 100%);
+}
+
+/* Gold divider line */
+.gold-divider {
+  width: 64px;
+  height: 3px;
+  background: var(--color-gold);
+  border-radius: 2px;
+}
+
+/* Glass effect */
+.glass {
+  background: rgba(219, 255, 255, 0.6);
+  backdrop-filter: blur(12px);
+  border: 1px solid rgba(219, 255, 255, 0.8);
+}
+
+/* Nav link hover (used by Navbar) */
+.nav-link {
+  font-family: var(--font-sans);
+  font-size: 0.9rem;
+  font-weight: 500;
+  color: var(--color-stone);
+  text-decoration: none;
+  transition: color 0.2s;
+}
+
+.nav-link:hover {
+  color: var(--color-teal);
+}
