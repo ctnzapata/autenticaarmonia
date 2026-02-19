@@ -5,15 +5,15 @@
 export const dynamic = 'force-dynamic'; // No pre-renderizar en build
 
 import { NextRequest, NextResponse } from 'next/server';
+import { supabase } from '@/lib/infrastructure/supabase';
 import { getSupabaseAdmin } from '@/lib/infrastructure/supabaseAdmin';
 
 export async function GET(request: NextRequest) {
-    const admin = getSupabaseAdmin();
     const { searchParams } = new URL(request.url);
     const technique = searchParams.get('technique');
     const search = searchParams.get('search');
 
-    let query = admin
+    let query = supabase
         .from('products')
         .select('*')
         .order('created_at', { ascending: false });
