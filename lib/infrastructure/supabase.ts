@@ -1,5 +1,10 @@
 // Supabase client — Auténtica Armonía
 // Docs: https://supabase.com/docs/reference/javascript
+//
+// NOTA DE SCHEMA:
+// PKs usan BIGINT GENERATED ALWAYS AS IDENTITY (no UUID v4)
+// Razón: evita fragmentación de índices B-tree (~2x más rápido en inserciones)
+// Ref: supabase-postgres-best-practices / schema-primary-keys
 
 import { createClient } from '@supabase/supabase-js';
 
@@ -15,7 +20,7 @@ export type Database = {
         Tables: {
             products: {
                 Row: {
-                    id: string;
+                    id: number;        // BIGINT IDENTITY (no UUID v4 — ver schema.sql)
                     slug: string;
                     name: string;
                     description: string | null;
@@ -33,15 +38,15 @@ export type Database = {
                     created_at: string;
                     updated_at: string;
                 };
-                Insert: Omit<Database['public']['Tables']['products']['Row'], 'id' | 'created_at' | 'updated_at'>;
+                Insert: Omit<Database['public']['Tables']['products']['Row'], 'id' | 'created_at' | 'updated_at' | 'rating' | 'review_count'>;
                 Update: Partial<Database['public']['Tables']['products']['Insert']>;
             };
             orders: {
                 Row: {
-                    id: string;
+                    id: number;        // BIGINT IDENTITY
                     customer_name: string;
                     customer_phone: string;
-                    product_id: string | null;
+                    product_id: number | null;  // FK → products.id (BIGINT)
                     customization: Record<string, unknown>;
                     total_amount: number;
                     status: 'PENDING' | 'CONFIRMED' | 'IN_PROGRESS' | 'SHIPPED' | 'DELIVERED';
