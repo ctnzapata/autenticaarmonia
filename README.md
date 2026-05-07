@@ -140,8 +140,8 @@ const link = generateWhatsAppLink(product, customization);
 ## 🗺️ Roadmap
 
 - [x] **v0.1.0** — Storefront completo + Admin Dashboard
-- [ ] **v0.2.0** — Admin CRUD de Productos, Bandeja de Pedidos, Personalizaciones
-- [ ] **v0.3.0** — Integración Supabase (datos reales), autenticación admin
+- [x] **v0.2.0** — Admin CRUD de Productos, Bandeja de Pedidos, Personalizaciones
+- [x] **v0.3.0** — Integración Supabase (datos reales), autenticación admin
 - [ ] **v0.4.0** — Animaciones Framer Motion, SEO dinámico, optimización de imágenes
 
 ---
